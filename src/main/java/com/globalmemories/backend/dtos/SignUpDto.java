@@ -1,6 +1,10 @@
 package com.globalmemories.backend.dtos;
 
+import java.time.LocalDate;
+
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,7 +23,13 @@ public class SignUpDto {
     private String lastName;
 
     @NotEmpty
-    private String login;
+    private String nationality;
+
+    @NotEmpty
+    private String email;
+
+    @NotEmpty
+    private String username;
 
     @NotEmpty
     private char[] password;
