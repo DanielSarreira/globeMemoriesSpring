@@ -21,10 +21,11 @@ public class UserDto {
     private String userBio;
     private String nationality;
     private String city;
+    private String gender;
     private LocalDate birthDate;
     private String languagesSpoken;
     private String email;
     private String username;
     private String token;
-
+    
 }

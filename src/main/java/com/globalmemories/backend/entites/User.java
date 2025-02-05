@@ -40,6 +40,10 @@ public class User {
     @Size(max = 255)
     private String city;
 
+    @Column(nullable = true)
+    @Size(max = 15)
+    private String gender;
+
     @Column(name = "birth_date", nullable = true)
     private LocalDate birthDate;
 
