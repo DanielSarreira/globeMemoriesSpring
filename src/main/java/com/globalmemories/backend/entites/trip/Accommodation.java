@@ -15,14 +15,14 @@ import java.util.List;
 @Builder
 @Data
 @Entity
-@Table(name = "accomodations")
-public class Accomodations {
+@Table(name = "accommodation")
+public class Accommodation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "name", nullable = false)
-    @Size(max = 100)
+    @Size(max = 55)
     private String name;
 
     @Column(name = "price", nullable = false)
@@ -31,7 +31,14 @@ public class Accomodations {
     @Column(name = "nr_of_nights", nullable = false)
     private int nrOfNights;
 
+    @Column(name = "description", nullable = false)
+    @Size(max = 255)
+    private String description;
+
+    @Column(name = "rating", nullable = false)
+    private int rating;
+
     @ManyToOne
-    @JoinColumn(name = "trip_id")
+    @JoinColumn(name = "trip_id", nullable = false)
     private Trip trip;
 }

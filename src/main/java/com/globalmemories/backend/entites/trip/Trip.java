@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.globalmemories.backend.entites.trip.TripReferencePoint;
+import com.globalmemories.backend.entites.Country;
 import com.globalmemories.backend.entites.User;
 
 @AllArgsConstructor
@@ -39,8 +40,9 @@ public class Trip {
     @Size(max = 100)
     private String title;
 
-    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<TripCountry> tripCountries;
+    @ManyToOne
+    @JoinColumn(name = "country_id", nullable = false)
+    private Country country;
 
     @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<TripCategory> tripCategories;
@@ -57,23 +59,25 @@ public class Trip {
     @Size(max = 15)
     private Integer tripDurationDays;
 
-    //create a class name and used for
-    @Column(nullable = true)
-    private String transportation;
+    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TripTransport> tripTransports = new ArrayList<>();
 
-    //create a table
-    @Column(name = "language_spoken", nullable = true)
-    @Size(max = 55)
-    private String languageSpoken;
+    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TripLanguageSpoken> tripLanguagesSpoken = new ArrayList<>();
 
+    @Column(name = "trip_sumary", nullable = false)
+    @Size(max = 1000)
+    private String tripSumary;
+    
     @Column(name = "trip_description", nullable = false)
-    @Size(max = 55)
+    @Size(max = 1000)
     private String tripDescription;
 
-    //a table for acomudation, each acomudation with price per day (optional), type (if hotel, motel, house, camping, etc), number of nights (optional), name of the place
+    @Column(name = "trip_rating", nullable = false)
+    private int tripRating;
+
     @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Size(max = 55)
-    private List<Accomodations> accomodations = new ArrayList<>();
+    private List<Accommodation> accommodations = new ArrayList<>();
 
     @Column(name = "trip_privacy", nullable = false)
     @Size(max = 100)

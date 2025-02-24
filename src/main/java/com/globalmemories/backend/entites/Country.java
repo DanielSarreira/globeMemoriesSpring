@@ -7,15 +7,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.util.Set;
-import java.util.List;
 
-import com.globalmemories.backend.entites.trip.TripCountry;
+import com.globalmemories.backend.entites.trip.Trip;
+
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Data
-@Entity
+@Entity                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
 @Table(name = "country")
 public class Country {
     @Id
@@ -29,7 +30,7 @@ public class Country {
     @OneToMany(mappedBy = "country", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<City> cities;
 
-    @OneToMany(mappedBy = "country", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<TripCountry> tripCountries;
+    @OneToMany(mappedBy = "country", cascade = CascadeType.ALL)
+    private List<Trip> trips;
 
 }

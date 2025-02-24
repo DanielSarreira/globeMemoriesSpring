@@ -1,5 +1,7 @@
 package com.globalmemories.backend.entites.trip;
 
+import java.util.ArrayList;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -15,18 +17,16 @@ import java.util.List;
 @Builder
 @Data
 @Entity
-@Table(name = "trip_itinerary")
-public class TripItinerary {
+@Table(name = "transport")
+public class Transport {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "nr_days", nullable = false)
-    private Integer nrDays;
+    @Column(name = "name", nullable = false)
+    private int name;
 
-    @OneToOne(mappedBy = "tripItinerary", cascade = CascadeType.ALL)
-    private Trip trip;
+    @OneToMany(mappedBy = "transport", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TripTransport> tripTransports = new ArrayList<>();
 
-    @OneToMany(mappedBy = "tripItinerary", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ItineraryDay> itineraryDays = new ArrayList<>();
 }

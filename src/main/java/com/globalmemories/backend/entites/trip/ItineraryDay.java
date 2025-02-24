@@ -1,5 +1,6 @@
 package com.globalmemories.backend.entites.trip;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.*;
@@ -14,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Data
 @Entity
-@Table(name = "itenerary_day")
+@Table(name = "itinerary_day")
 public class ItineraryDay {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,9 +26,9 @@ public class ItineraryDay {
     private String day;
 
     @OneToMany(mappedBy = "itineraryDay", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ItineraryDayTopic> topics;
+    private List<ItineraryDayTopic> topics = new ArrayList<>();
 
     @ManyToOne
-    @JoinColumn(name = "trip_itinerary_id")
-    private TripItinerary itinerary;
+    @JoinColumn(name = "trip_itinerary_id", nullable = false)
+    private TripItinerary tripItinerary;
 }

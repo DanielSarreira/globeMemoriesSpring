@@ -11,7 +11,7 @@ import jakarta.persistence.MapsId;
 import lombok.*;
 
 @Entity
-@Table(name = "trip_categories")
+@Table(name = "trip_category")
 @Getter
 @Setter
 @NoArgsConstructor
