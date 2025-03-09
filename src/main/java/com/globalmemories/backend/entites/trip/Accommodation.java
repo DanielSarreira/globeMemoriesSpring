@@ -28,13 +28,16 @@ public class Accommodation {
     @Column(name = "price", nullable = false)
     private int price;
 
+    //mudar para check in e out dates
     @Column(name = "nr_of_nights", nullable = false)
     private int nrOfNights;
 
+    //adicionar tipo tbm e fotos tbm
     @Column(name = "description", nullable = false)
     @Size(max = 255)
     private String description;
 
+    //adicionar regime tbm
     @Column(name = "rating", nullable = false)
     private int rating;
 
