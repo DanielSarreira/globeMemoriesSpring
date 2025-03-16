@@ -14,18 +14,19 @@ import lombok.NoArgsConstructor;
 public class TripDto {
 
     private Long id;
+    private Long userId;
+    private Long countryId;
+    private Long costId;
     private String title;
-    private String countryName;
     private Integer tripDurationDays;
     private String tripSummary;
     private String tripDescription;
     private int tripRating;
 
-    // Nested DTOs or simplified lists
-    private List<String> tripCategories;
-    private List<String> referencePoints;
-    private List<String> tripTransports;
-    private List<String> tripLanguagesSpoken;
-    private List<String> accommodations;
+    private List<TripCategoryDto> tripCategories;
+    private List<TripReferencePointDto> referencePoints;
+    private List<TripTransportDto> tripTransports;
+    private List<TripLanguageSpokenDto> tripLanguagesSpoken;
+    private List<AccommodationDto> accommodations;
     
 }

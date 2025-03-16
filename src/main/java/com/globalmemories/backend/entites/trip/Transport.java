@@ -24,7 +24,7 @@ public class Transport {
     private Long id;
 
     @Column(name = "name", nullable = false)
-    private int name;
+    private String name;
 
     @OneToMany(mappedBy = "transport", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TripTransport> tripTransports = new ArrayList<>();

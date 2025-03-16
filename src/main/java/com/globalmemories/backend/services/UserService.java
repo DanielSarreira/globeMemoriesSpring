@@ -60,6 +60,12 @@ public class UserService {
         return userMapper.toUserDto(user);
     }
 
+    public User getUserById(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException("User not found with id: " + userId, HttpStatus.NOT_FOUND));
+        return user;
+    }
+
     public UserDto updateUserProfile(Long id, UserDto userDto){   
         try {
             User user = userRepository.findById(id)

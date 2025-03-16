@@ -56,7 +56,6 @@ public class Trip {
     private Cost cost;
 
     @Column(name = "trip_duration_days", nullable = false)
-    @Size(max = 15)
     private Integer tripDurationDays;
 
     @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -67,7 +66,7 @@ public class Trip {
 
     @Column(name = "trip_sumary", nullable = false)
     @Size(max = 1000)
-    private String tripSumary;
+    private String tripSummary;
     
     @Column(name = "trip_description", nullable = false)
     @Size(max = 1000)
@@ -79,15 +78,14 @@ public class Trip {
     @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Accommodation> accommodations = new ArrayList<>();
 
-    @Column(name = "trip_privacy", nullable = false)
+    @Column(name = "trip_privacy", nullable = true)
     @Size(max = 100)
     private String tripPrivacy;
 
-    @Column(name = "allow_comments", nullable = false)
-    @Size(max = 100)
+    @Column(name = "allow_comments", nullable = true)
     private Boolean allowComments;
 
-    @Column(name = "comments_per_user", nullable = false)
+    @Column(name = "comments_per_user", nullable = true)
     @Size(max = 100)
     private String commentsPerUser;
 
