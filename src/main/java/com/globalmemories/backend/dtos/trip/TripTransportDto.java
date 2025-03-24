@@ -5,13 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Data
 public class TripTransportDto {
-    private Long id;
-    private Long tripId;
-    private Long transportId;
-    private int cost;
+    private Long transportId; // Refers to Transport entity
+    private int cost; // Cost of transport
+    private List<String> photos; // List of photo URLs
 }

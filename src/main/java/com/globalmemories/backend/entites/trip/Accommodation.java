@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,19 +26,33 @@ public class Accommodation {
     @Size(max = 55)
     private String name;
 
+    @ManyToOne
+    @JoinColumn(name = "accommodation_type_id", nullable = false)
+    private AccommodationType accommodationType;
+
+    @ManyToOne
+    @JoinColumn(name = "accommodation_board_id", nullable = false)
+    private AccommodationBoard accommodationBoard;
+
     @Column(name = "price", nullable = false)
     private int price;
 
-    //mudar para check in e out dates
-    @Column(name = "nr_of_nights", nullable = false)
-    private int nrOfNights;
+    @Column(name = "nr_nights", nullable = false)
+    private int nrNights;
 
-    //adicionar tipo tbm e fotos tbm
+    @Column(name = "check_in", nullable = true)
+    private LocalDate checkIn;
+
+    @Column(name = "check_out", nullable = true)
+    private LocalDate checkOut;
+
+    @Column(name = "booking_date", nullable = true)
+    private LocalDate bookingDate;
+
     @Column(name = "description", nullable = false)
-    @Size(max = 255)
+    @Size(max = 250)
     private String description;
 
-    //adicionar regime tbm
     @Column(name = "rating", nullable = false)
     private int rating;
 

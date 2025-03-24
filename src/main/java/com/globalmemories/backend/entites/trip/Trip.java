@@ -32,37 +32,29 @@ public class Trip {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "trip_itinerary_id", referencedColumnName = "id")
-    private TripItinerary tripItinerary;
-    
-    @Column(nullable = false)
-    @Size(max = 100)
-    private String title;
-
     @ManyToOne
     @JoinColumn(name = "country_id", nullable = false)
     private Country country;
 
-    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<TripCategory> tripCategories;
+    @Column(nullable = false)
+    @Size(max = 100)
+    private String title;
 
-    @Column(nullable = true)
-    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TripReferencePoint> referencePoints;
+    @Column(name = "start_date", nullable = false)
+    private LocalDate startDate;
+
+    @Column(name = "end_date", nullable = false)
+    private LocalDate endDate;
+
+    @Column(name = "trip_duration_days", nullable = false)
+    private Integer tripDurationDays;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "cost_id", referencedColumnName = "id")
     private Cost cost;
 
-    @Column(name = "trip_duration_days", nullable = false)
-    private Integer tripDurationDays;
-
-    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TripTransport> tripTransports = new ArrayList<>();
-
-    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TripLanguageSpoken> tripLanguagesSpoken = new ArrayList<>();
+    @Column(name = "booking_date", nullable = true)
+    private LocalDate bookingDate;
 
     @Column(name = "trip_sumary", nullable = false)
     @Size(max = 1000)
@@ -74,6 +66,23 @@ public class Trip {
 
     @Column(name = "trip_rating", nullable = false)
     private int tripRating;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "trip_itinerary_id", referencedColumnName = "id")
+    private TripItinerary tripItinerary;
+
+    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<TripCategory> tripCategories;
+    
+    @Column(nullable = true)
+    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TripReferencePoint> referencePoints;
+
+    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TripTransport> tripTransports;
+
+    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<TripLanguageSpoken> tripLanguagesSpoken;
 
     @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Accommodation> accommodations = new ArrayList<>();

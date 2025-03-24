@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,7 +27,10 @@ public class Transport {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "transport", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TripTransport> tripTransports = new ArrayList<>();
+    @Column(nullable = false)
+    @Size(max = 100)
+    private String description;
 
+    @OneToMany(mappedBy = "transport", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TripTransport> tripTransports;
 }
