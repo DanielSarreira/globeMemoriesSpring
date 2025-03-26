@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.globalmemories.backend.entites.trip.TripItinerary;
 
 import lombok.AllArgsConstructor;
@@ -21,8 +22,14 @@ public class TripDto {
     private Long userId;
     private Long countryId;
     private String title;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate startDate;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate endDate;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate bookingDate;
     private Integer tripDurationDays;
     private String tripSummary;
     private String tripDescription;

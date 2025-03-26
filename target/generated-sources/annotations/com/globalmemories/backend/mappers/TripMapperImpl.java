@@ -1,20 +1,16 @@
 package com.globalmemories.backend.mappers;
 
-import com.globalmemories.backend.dtos.trip.AccommodationDto;
 import com.globalmemories.backend.dtos.trip.TripDto;
 import com.globalmemories.backend.entites.Country;
 import com.globalmemories.backend.entites.User;
-import com.globalmemories.backend.entites.trip.Accommodation;
 import com.globalmemories.backend.entites.trip.Trip;
-import java.util.ArrayList;
-import java.util.List;
 import javax.annotation.processing.Generated;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-03-23T22:15:00+0000",
+    date = "2025-03-26T00:40:15+0000",
     comments = "version: 1.5.3.Final, compiler: Eclipse JDT (IDE) 3.41.0.z20250213-2037, environment: Java 21.0.6 (Eclipse Adoptium)"
 )
 @Component
@@ -39,6 +35,7 @@ public class TripMapperImpl implements TripMapper {
         tripDto.languageSpokenIds( tripMapperHelper.mapLanguagesSpokenToIds( trip.getTripLanguagesSpoken() ) );
         tripDto.accommodations( tripMapperHelper.mapAccommodations( trip.getAccommodations() ) );
         tripDto.cost( mapCostToDto( trip.getCost() ) );
+        tripDto.bookingDate( trip.getBookingDate() );
         tripDto.endDate( trip.getEndDate() );
         tripDto.id( trip.getId() );
         tripDto.startDate( trip.getStartDate() );
@@ -74,23 +71,10 @@ public class TripMapperImpl implements TripMapper {
         trip1.tripSummary( tripDto.getTripSummary() );
         trip1.tripDescription( tripDto.getTripDescription() );
         trip1.tripRating( tripDto.getTripRating() );
+        trip1.bookingDate( tripDto.getBookingDate() );
         trip1.id( tripDto.getId() );
 
         return trip1.build();
-    }
-
-    @Override
-    public List<Accommodation> mapAccommodationsFromDto(List<AccommodationDto> accommodationDtos, Trip trip) {
-        if ( accommodationDtos == null ) {
-            return null;
-        }
-
-        List<Accommodation> list = new ArrayList<Accommodation>( accommodationDtos.size() );
-        for ( AccommodationDto accommodationDto : accommodationDtos ) {
-            list.add( accommodationDtoToAccommodation( accommodationDto, trip ) );
-        }
-
-        return list;
     }
 
     private Long tripUserId(Trip trip) {
@@ -121,25 +105,5 @@ public class TripMapperImpl implements TripMapper {
             return null;
         }
         return id;
-    }
-
-    protected Accommodation accommodationDtoToAccommodation(AccommodationDto accommodationDto, Trip trip) {
-        if ( accommodationDto == null ) {
-            return null;
-        }
-
-        Accommodation.AccommodationBuilder accommodation = Accommodation.builder();
-
-        accommodation.bookingDate( accommodationDto.getBookingDate() );
-        accommodation.checkIn( accommodationDto.getCheckIn() );
-        accommodation.checkOut( accommodationDto.getCheckOut() );
-        accommodation.description( accommodationDto.getDescription() );
-        accommodation.id( accommodationDto.getId() );
-        accommodation.name( accommodationDto.getName() );
-        accommodation.nrNights( accommodationDto.getNrNights() );
-        accommodation.price( accommodationDto.getPrice() );
-        accommodation.rating( accommodationDto.getRating() );
-
-        return accommodation.build();
     }
 }

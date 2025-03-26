@@ -5,13 +5,17 @@ import lombok.*;
 
 import com.globalmemories.backend.entites.LanguageSpoken;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-@Data
 @Entity
 @Table(name = "trip_language_spoken")
-public class TripLanguageSpoken {
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Data
+@ToString(exclude = {"trip", "language_spoken"}) // Prevents infinite loops in bidirectional relationships
+@EqualsAndHashCode(onlyExplicitlyIncluded = true) // Ensures proper comparisons
+ public class TripLanguageSpoken {
 
     @EmbeddedId
     @EqualsAndHashCode.Include

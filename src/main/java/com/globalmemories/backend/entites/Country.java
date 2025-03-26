@@ -27,10 +27,4 @@ public class Country {
     @Size(max = 55)
     private String name;
 
-    @OneToMany(mappedBy = "country", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<City> cities;
-
-    @OneToMany(mappedBy = "country", cascade = CascadeType.ALL)
-    private List<Trip> trips;
-
 }

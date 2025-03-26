@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import com.globalmemories.backend.entites.trip.TripLanguageSpoken;
 
@@ -29,6 +30,6 @@ public class LanguageSpoken {
     private String name;
 
     @OneToMany(mappedBy = "languageSpoken", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TripLanguageSpoken> tripLanguagesSpoken = new ArrayList<>();
+    private Set<TripLanguageSpoken> tripLanguagesSpoken;
 
 }

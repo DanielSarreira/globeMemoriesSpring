@@ -114,6 +114,4 @@ public interface TripMapper {
         cost.setExtra(costDto.getExtra());
         return cost;
     }
-
-    List<Accommodation> mapAccommodationsFromDto(List<AccommodationDto> accommodationDtos, @Context Trip trip);
 }

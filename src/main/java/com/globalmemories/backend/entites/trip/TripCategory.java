@@ -17,6 +17,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Data
 @ToString(exclude = {"trip", "category"}) // Prevents infinite loops in bidirectional relationships
 @EqualsAndHashCode(onlyExplicitlyIncluded = true) // Ensures proper comparisons
 public class TripCategory implements Serializable {

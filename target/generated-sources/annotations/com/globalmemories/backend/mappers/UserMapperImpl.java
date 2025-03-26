@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-03-23T20:09:18+0000",
-    comments = "version: 1.5.3.Final, compiler: Eclipse JDT (IDE) 3.41.0.z20250213-2037, environment: Java 21.0.6 (Eclipse Adoptium)"
+    date = "2025-03-26T00:13:54+0000",
+    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.4 (Oracle Corporation)"
 )
 @Component
 public class UserMapperImpl implements UserMapper {
@@ -22,16 +22,16 @@ public class UserMapperImpl implements UserMapper {
 
         UserDto.UserDtoBuilder userDto = UserDto.builder();
 
-        userDto.birthDate( user.getBirthDate() );
-        userDto.city( user.getCity() );
-        userDto.email( user.getEmail() );
-        userDto.firstName( user.getFirstName() );
-        userDto.gender( user.getGender() );
         userDto.id( user.getId() );
-        userDto.languagesSpoken( user.getLanguagesSpoken() );
+        userDto.firstName( user.getFirstName() );
         userDto.lastName( user.getLastName() );
-        userDto.nationality( user.getNationality() );
         userDto.userBio( user.getUserBio() );
+        userDto.nationality( user.getNationality() );
+        userDto.city( user.getCity() );
+        userDto.gender( user.getGender() );
+        userDto.birthDate( user.getBirthDate() );
+        userDto.languagesSpoken( user.getLanguagesSpoken() );
+        userDto.email( user.getEmail() );
         userDto.username( user.getUsername() );
 
         return userDto.build();
@@ -45,10 +45,10 @@ public class UserMapperImpl implements UserMapper {
 
         User.UserBuilder user = User.builder();
 
-        user.email( signUpDto.getEmail() );
         user.firstName( signUpDto.getFirstName() );
         user.lastName( signUpDto.getLastName() );
         user.nationality( signUpDto.getNationality() );
+        user.email( signUpDto.getEmail() );
         user.username( signUpDto.getUsername() );
 
         return user.build();

@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
+
 import java.util.Set;
 
 import java.util.ArrayList;
@@ -85,6 +87,7 @@ public class Trip {
     private Set<TripLanguageSpoken> tripLanguagesSpoken;
 
     @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
     private List<Accommodation> accommodations = new ArrayList<>();
 
     @Column(name = "trip_privacy", nullable = true)
