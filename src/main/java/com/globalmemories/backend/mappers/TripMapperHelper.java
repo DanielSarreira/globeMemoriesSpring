@@ -38,7 +38,6 @@ public class TripMapperHelper {
     private final UserRepository userRepository;
     private final CountryRepository countryRepository;
     private final CategoryRepository categoryRepository;
-    private final TransportRepository transportRepository;
     private final LanguageSpokenRepository languageSpokenRepository;
     private final AccommodationTypeRepository accommodationTypeRepository;
     private final AccommodationBoardRepository accommodationBoardRepository;
