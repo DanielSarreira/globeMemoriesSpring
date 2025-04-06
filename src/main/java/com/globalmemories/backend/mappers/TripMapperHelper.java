@@ -27,7 +27,6 @@ import com.globalmemories.backend.repositories.CategoryRepository;
 import com.globalmemories.backend.repositories.CountryRepository;
 import com.globalmemories.backend.repositories.LanguageSpokenRepository;
 import com.globalmemories.backend.repositories.UserRepository;
-import com.globalmemories.backend.repositories.TransportRepository;
 
 import lombok.RequiredArgsConstructor;
 

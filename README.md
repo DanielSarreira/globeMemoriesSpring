@@ -87,3 +87,9 @@ The application is stateless. This means that no session is managed by Spring, n
 Each request to protected resources must contain a JWT in the Authorization header to be accepted.
 
 Only two requests don't need the JWT, the login and the register. But both will generate a JWT after their action finishes correctly.
+
+
+INSERT INTO transport (name) VALUES ('Avião');
+INSERT INTO language_spoken (name) VALUES ('Português');
+INSERT INTO category (name,icon) VALUES ('Natureza','icon');
+INSERT INTO accommodation_type (type) VALUES ('Hotel');

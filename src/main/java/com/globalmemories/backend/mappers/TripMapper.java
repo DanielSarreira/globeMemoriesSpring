@@ -70,7 +70,7 @@ public interface TripMapper {
     default List<TripTransportDto> mapTripTransports(List<TripTransport> tripTransports) {
         if (tripTransports == null) return null;
         return tripTransports.stream()
-                .map(tt -> new TripTransportDto(tt.getTransport().getId(), tt.getCost(), tt.getPhotos()))
+                .map(tt -> new TripTransportDto(tt.getTransport().getId(), tt.getCost(), tt.getDescription(), tt.getPhotos()))
                 .collect(Collectors.toList());
     }
 
@@ -82,6 +82,7 @@ public interface TripMapper {
                     TripTransport tripTransport = new TripTransport();
                     tripTransport.setTrip(trip);
                     tripTransport.setCost(dto.getCost());
+                    tripTransport.setDescription(dto.getDescription());
                     tripTransport.setPhotos(dto.getPhotos());
                     return tripTransport;
                 })

@@ -3,6 +3,7 @@ package com.globalmemories.backend.entites.trip;
 import java.util.List;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -40,6 +41,10 @@ public class TripTransport {
 
     @Column(name = "cost", nullable = false)
     private int cost;
+
+    @Column(name = "description", nullable = false)
+    @Size(max = 100)
+    private String description;
 
     @ElementCollection
     private List<String> photos;
