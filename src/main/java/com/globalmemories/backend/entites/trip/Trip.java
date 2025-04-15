@@ -38,6 +38,10 @@ public class Trip {
     @JoinColumn(name = "country_id", nullable = false)
     private Country country;
 
+    @Column(name = "city", nullable = false)
+    @Size(max = 255)
+    private String city;
+
     @Column(nullable = false)
     @Size(max = 100)
     private String title;
@@ -75,6 +79,10 @@ public class Trip {
 
     @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<TripCategory> tripCategories;
+
+    @Column(nullable = true)
+    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RecommendedFood> recommendedFoods;
     
     @Column(nullable = true)
     @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)

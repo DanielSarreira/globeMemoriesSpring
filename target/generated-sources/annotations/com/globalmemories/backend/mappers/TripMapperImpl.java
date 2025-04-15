@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-04-04T18:06:49+0100",
+    date = "2025-04-15T17:05:01+0100",
     comments = "version: 1.5.3.Final, compiler: Eclipse JDT (IDE) 3.42.0.z20250331-1358, environment: Java 21.0.6 (Eclipse Adoptium)"
 )
 @Component
@@ -29,13 +29,18 @@ public class TripMapperImpl implements TripMapper {
 
         tripDto.userId( tripUserId( trip ) );
         tripDto.countryId( tripCountryId( trip ) );
+        tripDto.countryName( tripCountryName( trip ) );
         tripDto.categoryIds( tripMapperHelper.mapCategoriesToIds( trip.getTripCategories() ) );
+        tripDto.categoryNames( mapCategoriesToNames( trip.getTripCategories() ) );
+        tripDto.recommendedFoods( mapRecommendedFoods( trip.getRecommendedFoods() ) );
         tripDto.referencePoints( mapReferencePoints( trip.getReferencePoints() ) );
         tripDto.tripTransports( mapTripTransports( trip.getTripTransports() ) );
         tripDto.languageSpokenIds( tripMapperHelper.mapLanguagesSpokenToIds( trip.getTripLanguagesSpoken() ) );
+        tripDto.languageSpokenNames( mapLanguagesSpokenToNames( trip.getTripLanguagesSpoken() ) );
         tripDto.accommodations( tripMapperHelper.mapAccommodations( trip.getAccommodations() ) );
         tripDto.cost( mapCostToDto( trip.getCost() ) );
         tripDto.bookingDate( trip.getBookingDate() );
+        tripDto.city( trip.getCity() );
         tripDto.endDate( trip.getEndDate() );
         tripDto.id( trip.getId() );
         tripDto.startDate( trip.getStartDate() );
@@ -59,6 +64,7 @@ public class TripMapperImpl implements TripMapper {
         trip1.user( tripMapperHelper.mapUserFromId( tripDto.getUserId() ) );
         trip1.country( tripMapperHelper.mapCountryFromId( tripDto.getCountryId() ) );
         trip1.tripCategories( tripMapperHelper.mapCategoriesFromIds( tripDto.getCategoryIds(), trip ) );
+        trip1.recommendedFoods( mapRecommendedFoodsFromDto( tripDto.getRecommendedFoods(), trip ) );
         trip1.referencePoints( mapReferencePointsFromDto( tripDto.getReferencePoints(), trip ) );
         trip1.tripTransports( mapTripTransportsFromDto( tripDto.getTripTransports(), trip ) );
         trip1.tripLanguagesSpoken( tripMapperHelper.mapLanguagesSpokenFromIds( tripDto.getLanguageSpokenIds(), trip ) );
@@ -72,6 +78,7 @@ public class TripMapperImpl implements TripMapper {
         trip1.tripDescription( tripDto.getTripDescription() );
         trip1.tripRating( tripDto.getTripRating() );
         trip1.bookingDate( tripDto.getBookingDate() );
+        trip1.city( tripDto.getCity() );
         trip1.id( tripDto.getId() );
 
         return trip1.build();
@@ -105,5 +112,20 @@ public class TripMapperImpl implements TripMapper {
             return null;
         }
         return id;
+    }
+
+    private String tripCountryName(Trip trip) {
+        if ( trip == null ) {
+            return null;
+        }
+        Country country = trip.getCountry();
+        if ( country == null ) {
+            return null;
+        }
+        String name = country.getName();
+        if ( name == null ) {
+            return null;
+        }
+        return name;
     }
 }

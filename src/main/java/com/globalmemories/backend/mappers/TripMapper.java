@@ -7,7 +7,6 @@ import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
-import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 import java.util.Set;
@@ -18,10 +17,14 @@ public interface TripMapper {
 
     @Mapping(source = "user.id", target = "userId")
     @Mapping(source = "country.id", target = "countryId")
+    @Mapping(source = "country.name", target = "countryName") // Map countryName
     @Mapping(target = "categoryIds", source = "tripCategories", qualifiedByName = "mapCategoriesToIds")
+    @Mapping(target = "categoryNames", source = "tripCategories", qualifiedByName = "mapCategoriesToNames") // Map categoryNames
+    @Mapping(source = "recommendedFoods", target = "recommendedFoods", qualifiedByName = "mapRecommendedFoods")
     @Mapping(source = "referencePoints", target = "referencePoints", qualifiedByName = "mapReferencePoints")
     @Mapping(source = "tripTransports", target = "tripTransports", qualifiedByName = "mapTripTransports")
     @Mapping(target = "languageSpokenIds", source = "tripLanguagesSpoken", qualifiedByName = "mapLanguagesSpokenToIds")
+    @Mapping(target = "languageSpokenNames", source = "tripLanguagesSpoken", qualifiedByName = "mapLanguagesSpokenToNames") // Map languageSpokenNames
     @Mapping(source = "accommodations", target = "accommodations", qualifiedByName = "mapAccommodations")
     @Mapping(source = "cost", target = "cost", qualifiedByName = "mapCostToDto")
     TripDto toDto(Trip trip);
@@ -29,6 +32,7 @@ public interface TripMapper {
     @Mapping(target = "user", source = "userId", qualifiedByName = "mapUserFromId")
     @Mapping(target = "country", source = "countryId", qualifiedByName = "mapCountryFromId")
     @Mapping(target = "tripCategories", source = "categoryIds", qualifiedByName = "mapCategoriesFromIds")
+    @Mapping(target = "recommendedFoods", source = "recommendedFoods", qualifiedByName = "mapRecommendedFoodsFromDto")
     @Mapping(target = "referencePoints", source = "referencePoints", qualifiedByName = "mapReferencePointsFromDto")
     @Mapping(target = "tripTransports", source = "tripTransports", qualifiedByName = "mapTripTransportsFromDto")
     @Mapping(target = "tripLanguagesSpoken", source = "languageSpokenIds", qualifiedByName = "mapLanguagesSpokenFromIds")
@@ -47,6 +51,39 @@ public interface TripMapper {
     default Trip toEntity(TripDto tripDto) {
         Trip trip = new Trip();
         return toEntity(tripDto, trip);
+    }
+
+    @Named("mapCategoriesToNames")
+    default Set<String> mapCategoriesToNames(Set<TripCategory> tripCategories) {
+        if (tripCategories == null) return null;
+        return tripCategories.stream()
+                .map(tc -> tc.getCategory().getName())
+                .collect(Collectors.toSet());
+    }
+
+    @Named("mapLanguagesSpokenToNames")
+    default Set<String> mapLanguagesSpokenToNames(Set<TripLanguageSpoken> tripLanguagesSpoken) {
+        if (tripLanguagesSpoken == null) return null;
+        return tripLanguagesSpoken.stream()
+                .map(ls -> ls.getLanguageSpoken().getName())
+                .collect(Collectors.toSet());
+    }
+
+    @Named("mapRecommendedFoods")
+    default List<RecommendedFoodDto> mapRecommendedFoods(List<RecommendedFood> recommendedFoods) {
+        if (recommendedFoods == null) return null;
+        return recommendedFoods.stream()
+                .map(rf -> new RecommendedFoodDto(
+                        rf.getId(), rf.getName(), rf.getDescription(), rf.getPhotos(), rf.getTrip().getId()))
+                .collect(Collectors.toList());
+    }
+
+    @Named("mapRecommendedFoodsFromDto")
+    default List<RecommendedFood> mapRecommendedFoodsFromDto(List<RecommendedFoodDto> recommendedFoodDtos, @Context Trip trip) {
+        if (recommendedFoodDtos == null) return null;
+        return recommendedFoodDtos.stream()
+                .map(dto -> new RecommendedFood(dto.getId(), dto.getName(), dto.getDescription(), dto.getPhotos(), trip))
+                .collect(Collectors.toList());
     }
 
     @Named("mapReferencePoints")
