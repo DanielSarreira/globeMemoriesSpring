@@ -1,13 +1,10 @@
 package com.globalmemories.backend.entites.trip;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -15,15 +12,19 @@ import java.util.List;
 @Builder
 @Data
 @Entity
-@Table(name = "trip_itinerary")
-public class TripItinerary {
+@Table(name = "negative_point")
+public class NegativePoint {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(mappedBy = "tripItinerary", cascade = CascadeType.ALL)
+    private String name;
+    
+    private String description;
+    
+    @ManyToOne
+    @JoinColumn(name = "trip_id", nullable = false)
     private Trip trip;
-
-    @OneToMany(mappedBy = "tripItinerary", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ItineraryDay> itineraryDays = new ArrayList<>();
+    
 }

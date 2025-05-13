@@ -34,15 +34,18 @@ public class TripDto {
     private Integer tripDurationDays;
     private String tripSummary;
     private String tripDescription;
+    private String weather;
     private int tripRating;
 
     private CostDto cost;
+    private TripItineraryDto tripItinerary; // Add this field
 
     private Set<Long> categoryIds;
     private Set<String> categoryNames; // Add this field
     private Set<Long> languageSpokenIds;
     private Set<String> languageSpokenNames; // Add this field
 
+    private List<NegativePointDto> negativePoints;
     private List<RecommendedFoodDto> recommendedFoods;
     private List<TripReferencePointDto> referencePoints;
     private List<TripTransportDto> tripTransports;

@@ -17,7 +17,6 @@ import java.util.List;
 public class TripItineraryDto implements Serializable {
 
     private Long id;
-    private Integer nrDays;
     private Long tripId;  // Assuming you only need the trip ID in the DTO
     private List<ItineraryDayDto> itineraryDays;  // Assuming you have a DTO for ItineraryDay
 

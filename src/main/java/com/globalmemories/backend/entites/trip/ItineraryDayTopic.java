@@ -14,7 +14,7 @@ import java.util.List;
 @Builder
 @Data
 @Entity
-@Table(name = "itenerary_day")
+@Table(name = "itinerary_day_topic")
 public class ItineraryDayTopic {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +22,11 @@ public class ItineraryDayTopic {
 
     @Column(name = "name", nullable = false)
     @Size(max = 55)
-    private String day;
+    private String name;
+
+    @Column(name = "description", nullable = false)
+    @Size(max = 255)
+    private String description;
 
     @ManyToOne
     @JoinColumn(name = "itinerary_day_id", nullable = false)

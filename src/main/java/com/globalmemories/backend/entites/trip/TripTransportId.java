@@ -16,5 +16,5 @@ public class TripTransportId implements Serializable {
 
     private Long tripId;
     private Long transportId;
-
+    private Integer sequenceNumber;
 }

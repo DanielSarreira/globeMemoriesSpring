@@ -23,6 +23,12 @@ public class TripService {
     @Autowired
     private CostRepository costRepository;
     @Autowired
+    private TripItineraryRepository tripItineraryRepository;
+    @Autowired
+    private NegativePointRepository negativePointRepository;
+    @Autowired
+    private RecommendedFoodRepository recommendedFoodRepository;
+    @Autowired
     private TripReferencePointRepository referencePointRepository;
     @Autowired
     private TripTransportRepository tripTransportRepository;
@@ -64,13 +70,27 @@ public class TripService {
 
         Trip trip = tripMapper.toEntity(tripDto);
 
+        System.out.println(" ");
+        System.out.println("TRIP");
+        System.out.println(" ");
+        System.out.println("trip {} " + tripDto);
+        System.out.println(" ");
+        
+        trip.setNegativePoints(null);
+        trip.setRecommendedFoods(null);
         trip.setReferencePoints(null);
         trip.setTripTransports(null);
         trip.setAccommodations(null);
         trip.setTripCategories(null);
         trip.setTripLanguagesSpoken(null);
+        trip.setTripItinerary(null);
         
-        trip = tripRepository.save(trip); // Save to get ID
+        try {
+            trip = tripRepository.save(trip); // Save to get ID
+        } catch (Exception e) {
+            System.out.println("ERROR IN TRY CATCH: " + e.getMessage());
+        }
+        
 
         final Trip finalTrip = trip;      // Final reference for lambdas
 
@@ -79,6 +99,58 @@ public class TripService {
             cost.setTrip(finalTrip);
             cost = costRepository.save(cost);
             trip.setCost(cost);
+        }
+
+        // Save TripItinerary
+        if (tripDto.getTripItinerary() != null) {
+            TripItinerary tripItinerary = new TripItinerary();
+            tripItinerary.setTrip(finalTrip);
+
+            System.out.println(" ");
+            System.out.println("TRIP_ITINERARY");
+            System.out.println(" ");
+            System.out.println("trip itinerary: {} " + tripDto.getTripItinerary());
+            System.out.println(" ");
+
+            // Save the TripItinerary first to generate its ID
+            TripItinerary savedTripItinerary = tripItineraryRepository.save(tripItinerary);
+
+            List<ItineraryDay> itineraryDays = tripDto.getTripItinerary().getItineraryDays().stream()
+            .map(dayDto -> {
+                ItineraryDay day = new ItineraryDay();
+                day.setDay(dayDto.getDay());
+                day.setTripItinerary(savedTripItinerary); // Associate with the saved TripItinerary
+
+                List<ItineraryDayTopic> topics = dayDto.getTopics().stream()
+                        .map(topicDto -> {
+                            ItineraryDayTopic topic = new ItineraryDayTopic();
+                            topic.setName(topicDto.getName());
+                            topic.setDescription(topicDto.getDescription());
+                            topic.setItineraryDay(day); // Associate with the ItineraryDay
+                            return topic;
+                        }).collect(Collectors.toList());
+
+                day.setTopics(topics);
+                return day;
+            }).collect(Collectors.toList());
+
+            savedTripItinerary.setItineraryDays(itineraryDays);
+            tripItineraryRepository.save(savedTripItinerary);
+            trip.setTripItinerary(savedTripItinerary);
+        }
+
+        if (tripDto.getNegativePoints() != null) {
+            List<NegativePoint> negativePoints = tripMapper.mapNegativePointsFromDto(tripDto.getNegativePoints(), finalTrip);
+            negativePoints.forEach(rp -> rp.setTrip(finalTrip));
+            negativePoints = negativePointRepository.saveAll(negativePoints);
+            trip.setNegativePoints(negativePoints);
+        }
+
+        if (tripDto.getRecommendedFoods() != null) {
+            List<RecommendedFood> recommendedFoods = tripMapper.mapRecommendedFoodsFromDto(tripDto.getRecommendedFoods(), finalTrip);
+            recommendedFoods.forEach(rp -> rp.setTrip(finalTrip));
+            recommendedFoods = recommendedFoodRepository.saveAll(recommendedFoods);
+            trip.setRecommendedFoods(recommendedFoods);
         }
 
         if (tripDto.getReferencePoints() != null) {
@@ -95,16 +167,16 @@ public class TripService {
                 for (int i = 0; i < tripTransports.size(); i++) {
                     TripTransport tt = tripTransports.get(i);
                     Long transportId = transportDtos.get(i).getTransportId(); // Match by index
-                    tt.setTrip(trip);
                     Transport transport = transportRepository.findById(transportId)
                             .orElseThrow(() -> new RuntimeException("Transport not found with id: " + transportId));
+                    tt.setTrip(trip);
                     tt.setTransport(transport);
-                    tt.setId(new TripTransportId(trip.getId(), transport.getId()));
+                    tt.setId(new TripTransportId(trip.getId(), transport.getId(), i)); // Use loop index as sequence_number
                 }
-                tripTransports = tripTransportRepository.saveAll(tripTransports);
-                trip.setTripTransports(tripTransports);
+                tripTransports = tripTransportRepository.saveAll(tripTransports); // Save all TripTransport objects
+                trip.setTripTransports(tripTransports); // Set the saved objects back to the trip
             } catch (Exception e) {
-
+                e.printStackTrace(); // Log the exception for debugging
             }
         }
 

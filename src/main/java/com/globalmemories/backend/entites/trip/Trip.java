@@ -55,7 +55,7 @@ public class Trip {
     @Column(name = "trip_duration_days", nullable = false)
     private Integer tripDurationDays;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "cost_id", referencedColumnName = "id")
     private Cost cost;
 
@@ -67,13 +67,21 @@ public class Trip {
     private String tripSummary;
     
     @Column(name = "trip_description", nullable = false)
-    @Size(max = 1000)
+    @Size(max = 10000)
     private String tripDescription;
+
+    @Column(nullable = false)
+    @Size(max = 500)
+    private String weather;
 
     @Column(name = "trip_rating", nullable = false)
     private int tripRating;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @Column(nullable = true)
+    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<NegativePoint> negativePoints;
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "trip_itinerary_id", referencedColumnName = "id")
     private TripItinerary tripItinerary;
 
