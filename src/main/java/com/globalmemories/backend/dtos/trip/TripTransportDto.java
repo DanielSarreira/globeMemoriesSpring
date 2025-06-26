@@ -16,4 +16,5 @@ public class TripTransportDto {
     private int cost; // Cost of transport
     private String description;
     private List<String> photos; // List of photo URLs
+    private String name; // Transport details
 }

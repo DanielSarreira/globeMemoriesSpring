@@ -1,5 +1,7 @@
 package com.globalmemories.backend.mappers;
 
+import com.globalmemories.backend.dtos.CategoryDto;
+import com.globalmemories.backend.dtos.LanguageSpokenDto;
 import com.globalmemories.backend.dtos.trip.*;
 import com.globalmemories.backend.entites.trip.*;
 
@@ -18,14 +20,12 @@ public interface TripMapper {
     @Mapping(source = "user.id", target = "userId")
     @Mapping(source = "country.id", target = "countryId")
     @Mapping(source = "country.name", target = "countryName") // Map countryName
-    @Mapping(target = "categoryIds", source = "tripCategories", qualifiedByName = "mapCategoriesToIds")
-    @Mapping(target = "categoryNames", source = "tripCategories", qualifiedByName = "mapCategoriesToNames") // Map categoryNames
+    @Mapping(target = "categories", source = "tripCategories", qualifiedByName = "mapCategoriesToDto")
     @Mapping(source = "negativePoints", target = "negativePoints", qualifiedByName = "mapNegativePoints")
     @Mapping(source = "recommendedFoods", target = "recommendedFoods", qualifiedByName = "mapRecommendedFoods")
     @Mapping(source = "referencePoints", target = "referencePoints", qualifiedByName = "mapReferencePoints")
     @Mapping(source = "tripTransports", target = "tripTransports", qualifiedByName = "mapTripTransports")
-    @Mapping(target = "languageSpokenIds", source = "tripLanguagesSpoken", qualifiedByName = "mapLanguagesSpokenToIds")
-    @Mapping(target = "languageSpokenNames", source = "tripLanguagesSpoken", qualifiedByName = "mapLanguagesSpokenToNames") // Map languageSpokenNames
+    @Mapping(target = "languagesSpoken", source = "tripLanguagesSpoken", qualifiedByName = "mapLanguagesSpokenToDto")
     @Mapping(source = "accommodations", target = "accommodations", qualifiedByName = "mapAccommodations")
     @Mapping(source = "cost", target = "cost", qualifiedByName = "mapCostToDto")
     @Mapping(source = "tripItinerary", target = "tripItinerary", qualifiedByName = "mapTripItineraryToDto")
@@ -33,12 +33,12 @@ public interface TripMapper {
 
     @Mapping(target = "user", source = "userId", qualifiedByName = "mapUserFromId")
     @Mapping(target = "country", source = "countryId", qualifiedByName = "mapCountryFromId")
-    @Mapping(target = "tripCategories", source = "categoryIds", qualifiedByName = "mapCategoriesFromIds")
+    @Mapping(target = "tripCategories", source = "categories", qualifiedByName = "mapCategoriesFromIds")
     @Mapping(target = "negativePoints", source = "negativePoints", qualifiedByName = "mapNegativePointsFromDto")
     @Mapping(target = "recommendedFoods", source = "recommendedFoods", qualifiedByName = "mapRecommendedFoodsFromDto")
     @Mapping(target = "referencePoints", source = "referencePoints", qualifiedByName = "mapReferencePointsFromDto")
     @Mapping(target = "tripTransports", source = "tripTransports", qualifiedByName = "mapTripTransportsFromDto")
-    @Mapping(target = "tripLanguagesSpoken", source = "languageSpokenIds", qualifiedByName = "mapLanguagesSpokenFromIds")
+    @Mapping(target = "tripLanguagesSpoken", source = "languagesSpoken", qualifiedByName = "mapLanguagesSpokenFromIds")
     @Mapping(source = "accommodations", target = "accommodations", qualifiedByName = "mapAccommodationsFromDto")
     @Mapping(source = "cost", target = "cost", qualifiedByName = "mapCostFromDto")
     @Mapping(source = "tripItinerary", target = "tripItinerary", qualifiedByName = "mapTripItineraryFromDto")
@@ -58,12 +58,16 @@ public interface TripMapper {
         return toEntity(tripDto, trip);
     }
 
-    @Named("mapCategoriesToNames")
-    default Set<String> mapCategoriesToNames(Set<TripCategory> tripCategories) {
+    @Named("mapCategoriesToDto")
+    default List<CategoryDto> mapCategoriesToDto(Set<TripCategory> tripCategories) {
         if (tripCategories == null) return null;
         return tripCategories.stream()
-                .map(tc -> tc.getCategory().getName())
-                .collect(Collectors.toSet());
+            .map(tc -> CategoryDto.builder()
+                .id(tc.getCategory().getId())
+                .name(tc.getCategory().getName())
+                .icon(tc.getCategory().getIcon())
+                .build())
+            .collect(Collectors.toList());
     }
 
     @Named("mapLanguagesSpokenToNames")
@@ -72,6 +76,17 @@ public interface TripMapper {
         return tripLanguagesSpoken.stream()
                 .map(ls -> ls.getLanguageSpoken().getName())
                 .collect(Collectors.toSet());
+    }
+
+    @Named("mapLanguagesSpokenToDto")
+    default List<LanguageSpokenDto> mapLanguagesSpokenToDto(Set<TripLanguageSpoken> tripLanguagesSpoken) {
+        if (tripLanguagesSpoken == null) return null;
+        return tripLanguagesSpoken.stream()
+            .map(ls -> LanguageSpokenDto.builder()
+                .id(ls.getLanguageSpoken().getId())
+                .name(ls.getLanguageSpoken().getName())
+                .build())
+            .collect(Collectors.toList());
     }
 
     @Named("mapNegativePoints")
@@ -129,8 +144,14 @@ public interface TripMapper {
     default List<TripTransportDto> mapTripTransports(List<TripTransport> tripTransports) {
         if (tripTransports == null) return null;
         return tripTransports.stream()
-                .map(tt -> new TripTransportDto(tt.getTransport().getId(), tt.getCost(), tt.getDescription(), tt.getPhotos()))
-                .collect(Collectors.toList());
+            .map(tt -> TripTransportDto.builder()
+                .name(tt.getTransport() != null ? tt.getTransport().getName() : null)
+                .cost(tt.getCost())
+                .description(tt.getDescription())
+                .photos(tt.getPhotos())
+                // add other fields as needed
+                .build())
+            .collect(Collectors.toList());
     }
 
     @Named("mapTripTransportsFromDto")

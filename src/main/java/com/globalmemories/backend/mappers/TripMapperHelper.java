@@ -8,6 +8,8 @@ import org.mapstruct.Context;
 import org.mapstruct.Named;
 import org.springframework.stereotype.Component;
 
+import com.globalmemories.backend.dtos.CategoryDto;
+import com.globalmemories.backend.dtos.LanguageSpokenDto;
 import com.globalmemories.backend.dtos.trip.AccommodationDto;
 import com.globalmemories.backend.entites.Category;
 import com.globalmemories.backend.entites.Country;
@@ -53,25 +55,15 @@ public class TripMapperHelper {
                 .orElseThrow(() -> new RuntimeException("Country not found with id: " + countryId));
     }
 
-    @Named("mapCategoriesToIds")
-    public Set<Long> mapCategoriesToIds(Set<TripCategory> tripCategories) {
-        if (tripCategories == null) {
-            return null;
-        }
-        return tripCategories.stream()
-                .map(tripCategory -> tripCategory.getCategory().getId())
-                .collect(Collectors.toSet());
-    }
-
     @Named("mapCategoriesFromIds")
-    public Set<TripCategory> mapCategoriesFromIds(Set<Long> categoryIds, @Context Trip trip) {
-        if (categoryIds == null) {
+    public Set<TripCategory> mapCategoriesFromIds(List<CategoryDto> categoryDtos, @Context Trip trip) {
+        if (categoryDtos == null) {
             return null;
         }
-        return categoryIds.stream()
-                .map(categoryId -> {
-                    Category category = categoryRepository.findById(categoryId)
-                            .orElseThrow(() -> new RuntimeException("Category not found with id: " + categoryId));
+        return categoryDtos.stream()
+                .map(cat -> {
+                    Category category = categoryRepository.findById(cat.getId())
+                            .orElseThrow(() -> new RuntimeException("Category not found with id: " + cat.getId()));
                     return new TripCategory(new TripCategoryId(trip.getId(), category.getId()), trip, category);
                 })
                 .collect(Collectors.toSet());
@@ -88,14 +80,14 @@ public class TripMapperHelper {
     }
 
     @Named("mapLanguagesSpokenFromIds")
-    public Set<TripLanguageSpoken> mapLanguagesSpokenFromIds(Set<Long> languageSpokenIds, @Context Trip trip) {
-        if (languageSpokenIds == null) {
+    public Set<TripLanguageSpoken> mapLanguagesSpokenFromIds(List<LanguageSpokenDto> languageSpokenDtos, @Context Trip trip) {
+        if (languageSpokenDtos == null) {
             return null;
         }
-        return languageSpokenIds.stream()
-                .map(languageSpokenId -> {
-                    LanguageSpoken languageSpoken = languageSpokenRepository.findById(languageSpokenId)
-                            .orElseThrow(() -> new RuntimeException("Language Spoken not found with id: " + languageSpokenId));
+        return languageSpokenDtos.stream()
+                .map(ls -> {
+                    LanguageSpoken languageSpoken = languageSpokenRepository.findById(ls.getId())
+                            .orElseThrow(() -> new RuntimeException("Language Spoken not found with id: " + ls.getId()));
                     return new TripLanguageSpoken(new TripLanguageSpokenId(trip.getId(), languageSpoken.getId()), trip, languageSpoken);
                 })
                 .collect(Collectors.toSet());

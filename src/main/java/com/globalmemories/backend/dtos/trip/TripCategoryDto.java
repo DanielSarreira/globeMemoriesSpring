@@ -16,7 +16,6 @@ public class TripCategoryDto implements Serializable {
     private Long tripId;
     private Long categoryId;
 
-    // Optionally, if you want to include additional fields from the `Trip` and `Category` objects.
-    private String tripName;  // Assuming there's a `name` field in the Trip class
-    private String categoryName;  // Assuming there's a `name` field in the Category class
+    private String tripName;  
+    private String categoryName; 
 }

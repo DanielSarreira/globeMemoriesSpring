@@ -189,13 +189,13 @@ public class TripService {
             trip.setAccommodations(accommodations);
         }
 
-        if (tripDto.getCategoryIds() != null) {
+        if (tripDto.getCategories() != null) {
             System.out.println(" ");
             System.out.println("TRIP_CATEGORIES");
             System.out.println(" ");
-            System.out.println("trip categories: {} " + tripDto.getCategoryIds());
+            System.out.println("trip categories: {} " + tripDto.getCategories());
             System.out.println(" ");
-            Set<TripCategory> tripCategories = tripMapperHelper.mapCategoriesFromIds(tripDto.getCategoryIds(), finalTrip);
+            Set<TripCategory> tripCategories = tripMapperHelper.mapCategoriesFromIds(tripDto.getCategories(), finalTrip);
             tripCategories.forEach(acc -> 
                 acc.setTrip(finalTrip)
             );
@@ -203,13 +203,13 @@ public class TripService {
             trip.setTripCategories(tripCategories);
         }
 
-        if (tripDto.getLanguageSpokenIds() != null) {
+        if (tripDto.getLanguagesSpoken() != null) {
             System.out.println(" ");
             System.out.println("TRIP_CATEGORIES");
             System.out.println(" ");
-            System.out.println("trip categories: {} " + tripDto.getLanguageSpokenIds());
+            System.out.println("trip categories: {} " + tripDto.getLanguagesSpoken());
             System.out.println(" ");
-            Set<TripLanguageSpoken> tripLanguageSpokens = tripMapperHelper.mapLanguagesSpokenFromIds(tripDto.getLanguageSpokenIds(), finalTrip);
+            Set<TripLanguageSpoken> tripLanguageSpokens = tripMapperHelper.mapLanguagesSpokenFromIds(tripDto.getLanguagesSpoken(), finalTrip);
             tripLanguageSpokens.forEach(acc -> 
                 acc.setTrip(finalTrip)
             );

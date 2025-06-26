@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.globalmemories.backend.dtos.CategoryDto;
+import com.globalmemories.backend.dtos.LanguageSpokenDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -40,10 +42,8 @@ public class TripDto {
     private CostDto cost;
     private TripItineraryDto tripItinerary; // Add this field
 
-    private Set<Long> categoryIds;
-    private Set<String> categoryNames; // Add this field
-    private Set<Long> languageSpokenIds;
-    private Set<String> languageSpokenNames; // Add this field
+    private List<CategoryDto> categories;
+    private List<LanguageSpokenDto> languagesSpoken;
 
     private List<NegativePointDto> negativePoints;
     private List<RecommendedFoodDto> recommendedFoods;
