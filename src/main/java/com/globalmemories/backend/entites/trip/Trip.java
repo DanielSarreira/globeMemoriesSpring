@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.globalmemories.backend.entites.trip.TripReferencePoint;
-import com.globalmemories.backend.entites.Country;
 import com.globalmemories.backend.entites.User;
 
 @AllArgsConstructor
@@ -34,11 +33,7 @@ public class Trip {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "country_id", nullable = false)
-    private Country country;
-
-    @Column(name = "city", nullable = false)
+    @Column(name = "city", nullable = true)
     @Size(max = 255)
     private String city;
 
@@ -87,6 +82,9 @@ public class Trip {
 
     @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<TripCategory> tripCategories;
+
+    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<TripCity> tripCities;
 
     @Column(nullable = true)
     @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)

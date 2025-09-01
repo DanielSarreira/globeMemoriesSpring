@@ -35,6 +35,10 @@ public class Accommodation {
     @JoinColumn(name = "accommodation_board_id", nullable = false)
     private AccommodationBoard accommodationBoard;
 
+    @Column(name = "city", nullable = false)
+    @Size(max = 55)
+    private String city;
+
     @Column(name = "price", nullable = false)
     private int price;
 

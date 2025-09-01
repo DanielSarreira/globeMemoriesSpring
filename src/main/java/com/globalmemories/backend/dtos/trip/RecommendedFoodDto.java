@@ -18,6 +18,7 @@ public class RecommendedFoodDto  implements Serializable{
     private Long id;
     private String name;
     private String description;
+    private String city;
     private List<String> photos;
     private Long tripId;  // The ID of the related Trip entity
 }

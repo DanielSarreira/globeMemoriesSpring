@@ -35,6 +35,10 @@ public class RecommendedFood {
     @Size(max = 255)
     private String description;
 
+    @Column(name = "city", nullable = false)
+    @Size(max = 55)
+    private String city;
+
     @ElementCollection
     private List<String> photos;
 

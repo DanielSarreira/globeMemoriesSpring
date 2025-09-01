@@ -1,6 +1,7 @@
 package com.globalmemories.backend.entites.trip;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,9 +20,15 @@ public class TripReferencePoint {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
     
+    @Column(nullable = false)
     private String description;
+
+    @Column(name = "city", nullable = false)
+    @Size(max = 55)
+    private String city;
 
     @ElementCollection
     private List<String> photos;

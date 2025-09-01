@@ -9,7 +9,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Data
-public class CountryDto {
+public class CityDto {
     private Long id;
-    private String name;
+    private String cityName;
+    private String countryName;
 }
+
+

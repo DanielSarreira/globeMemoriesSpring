@@ -1,7 +1,6 @@
 package com.globalmemories.backend.mappers;
 
 import com.globalmemories.backend.dtos.trip.TripDto;
-import com.globalmemories.backend.entites.Country;
 import com.globalmemories.backend.entites.User;
 import com.globalmemories.backend.entites.trip.Trip;
 import javax.annotation.processing.Generated;
@@ -10,8 +9,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-06-26T23:34:35+0100",
-    comments = "version: 1.5.3.Final, compiler: Eclipse JDT (IDE) 3.42.0.v20250514-1000, environment: Java 21.0.7 (Eclipse Adoptium)"
+    date = "2025-08-29T17:26:16+0100",
+    comments = "version: 1.5.3.Final, compiler: Eclipse JDT (IDE) 3.42.50.v20250729-0351, environment: Java 21.0.8 (Eclipse Adoptium)"
 )
 @Component
 public class TripMapperImpl implements TripMapper {
@@ -28,9 +27,8 @@ public class TripMapperImpl implements TripMapper {
         TripDto.TripDtoBuilder tripDto = TripDto.builder();
 
         tripDto.userId( tripUserId( trip ) );
-        tripDto.countryId( tripCountryId( trip ) );
-        tripDto.countryName( tripCountryName( trip ) );
         tripDto.categories( mapCategoriesToDto( trip.getTripCategories() ) );
+        tripDto.cities( mapCitiesToDto( trip.getTripCities() ) );
         tripDto.negativePoints( mapNegativePoints( trip.getNegativePoints() ) );
         tripDto.recommendedFoods( mapRecommendedFoods( trip.getRecommendedFoods() ) );
         tripDto.referencePoints( mapReferencePoints( trip.getReferencePoints() ) );
@@ -63,8 +61,8 @@ public class TripMapperImpl implements TripMapper {
         Trip.TripBuilder trip1 = Trip.builder();
 
         trip1.user( tripMapperHelper.mapUserFromId( tripDto.getUserId() ) );
-        trip1.country( tripMapperHelper.mapCountryFromId( tripDto.getCountryId() ) );
         trip1.tripCategories( tripMapperHelper.mapCategoriesFromIds( tripDto.getCategories(), trip ) );
+        trip1.tripCities( tripMapperHelper.mapCitiesFromIds( tripDto.getCities(), trip ) );
         trip1.negativePoints( mapNegativePointsFromDto( tripDto.getNegativePoints(), trip ) );
         trip1.recommendedFoods( mapRecommendedFoodsFromDto( tripDto.getRecommendedFoods(), trip ) );
         trip1.referencePoints( mapReferencePointsFromDto( tripDto.getReferencePoints(), trip ) );
@@ -101,35 +99,5 @@ public class TripMapperImpl implements TripMapper {
             return null;
         }
         return id;
-    }
-
-    private Long tripCountryId(Trip trip) {
-        if ( trip == null ) {
-            return null;
-        }
-        Country country = trip.getCountry();
-        if ( country == null ) {
-            return null;
-        }
-        Long id = country.getId();
-        if ( id == null ) {
-            return null;
-        }
-        return id;
-    }
-
-    private String tripCountryName(Trip trip) {
-        if ( trip == null ) {
-            return null;
-        }
-        Country country = trip.getCountry();
-        if ( country == null ) {
-            return null;
-        }
-        String name = country.getName();
-        if ( name == null ) {
-            return null;
-        }
-        return name;
     }
 }

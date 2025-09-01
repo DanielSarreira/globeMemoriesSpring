@@ -1,6 +1,7 @@
 package com.globalmemories.backend.mappers;
 
 import com.globalmemories.backend.dtos.CategoryDto;
+import com.globalmemories.backend.dtos.CityDto;
 import com.globalmemories.backend.dtos.LanguageSpokenDto;
 import com.globalmemories.backend.dtos.trip.*;
 import com.globalmemories.backend.entites.trip.*;
@@ -18,9 +19,8 @@ import java.util.stream.Collectors;
 public interface TripMapper {
 
     @Mapping(source = "user.id", target = "userId")
-    @Mapping(source = "country.id", target = "countryId")
-    @Mapping(source = "country.name", target = "countryName") // Map countryName
     @Mapping(target = "categories", source = "tripCategories", qualifiedByName = "mapCategoriesToDto")
+    @Mapping(target = "cities", source = "tripCities", qualifiedByName = "mapCitiesToDto")
     @Mapping(source = "negativePoints", target = "negativePoints", qualifiedByName = "mapNegativePoints")
     @Mapping(source = "recommendedFoods", target = "recommendedFoods", qualifiedByName = "mapRecommendedFoods")
     @Mapping(source = "referencePoints", target = "referencePoints", qualifiedByName = "mapReferencePoints")
@@ -32,8 +32,8 @@ public interface TripMapper {
     TripDto toDto(Trip trip);
 
     @Mapping(target = "user", source = "userId", qualifiedByName = "mapUserFromId")
-    @Mapping(target = "country", source = "countryId", qualifiedByName = "mapCountryFromId")
     @Mapping(target = "tripCategories", source = "categories", qualifiedByName = "mapCategoriesFromIds")
+    @Mapping(target = "tripCities", source = "cities", qualifiedByName = "mapCitiesFromIds")
     @Mapping(target = "negativePoints", source = "negativePoints", qualifiedByName = "mapNegativePointsFromDto")
     @Mapping(target = "recommendedFoods", source = "recommendedFoods", qualifiedByName = "mapRecommendedFoodsFromDto")
     @Mapping(target = "referencePoints", source = "referencePoints", qualifiedByName = "mapReferencePointsFromDto")
@@ -66,6 +66,18 @@ public interface TripMapper {
                 .id(tc.getCategory().getId())
                 .name(tc.getCategory().getName())
                 .icon(tc.getCategory().getIcon())
+                .build())
+            .collect(Collectors.toList());
+    }
+
+    @Named("mapCitiesToDto")
+    default List<CityDto> mapCitiesToDto(Set<TripCity> tripCities) {
+        if (tripCities == null) return null;
+        return tripCities.stream()
+            .map(tc -> CityDto.builder()
+                .id(tc.getCity().getId())
+                .cityName(tc.getCity().getCityName())
+                .countryName(tc.getCity().getCountryName())
                 .build())
             .collect(Collectors.toList());
     }
@@ -111,7 +123,7 @@ public interface TripMapper {
         if (recommendedFoods == null) return null;
         return recommendedFoods.stream()
                 .map(rf -> new RecommendedFoodDto(
-                        rf.getId(), rf.getName(), rf.getDescription(), rf.getPhotos(), rf.getTrip().getId()))
+                        rf.getId(), rf.getName(), rf.getDescription(), rf.getCity(), rf.getPhotos(), rf.getTrip().getId()))
                 .collect(Collectors.toList());
     }
 
@@ -119,7 +131,7 @@ public interface TripMapper {
     default List<RecommendedFood> mapRecommendedFoodsFromDto(List<RecommendedFoodDto> recommendedFoodsDto, @Context Trip trip) {
         if (recommendedFoodsDto == null) return null;
         return recommendedFoodsDto.stream()
-                .map(dto -> new RecommendedFood(dto.getId(), dto.getName(), dto.getDescription(), dto.getPhotos(), trip))
+                .map(dto -> new RecommendedFood(dto.getId(), dto.getName(), dto.getDescription(), dto.getCity(), dto.getPhotos(), trip))
                 .collect(Collectors.toList());
     }
 
@@ -128,7 +140,7 @@ public interface TripMapper {
         if (referencePoints == null) return null;
         return referencePoints.stream()
                 .map(rp -> new TripReferencePointDto(
-                        rp.getId(), rp.getName(), rp.getDescription(), rp.getPhotos(), rp.getTrip().getId()))
+                        rp.getId(), rp.getName(), rp.getDescription(), rp.getCity(), rp.getPhotos(), rp.getTrip().getId()))
                 .collect(Collectors.toList());
     }
 
@@ -136,7 +148,7 @@ public interface TripMapper {
     default List<TripReferencePoint> mapReferencePointsFromDto(List<TripReferencePointDto> referencePointDtos, @Context Trip trip) {
         if (referencePointDtos == null) return null;
         return referencePointDtos.stream()
-                .map(dto -> new TripReferencePoint(dto.getId(), dto.getName(), dto.getDescription(), dto.getPhotos(), trip))
+                .map(dto -> new TripReferencePoint(dto.getId(), dto.getName(), dto.getDescription(), dto.getCity(), dto.getPhotos(), trip))
                 .collect(Collectors.toList());
     }
 

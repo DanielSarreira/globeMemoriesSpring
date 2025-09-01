@@ -4,15 +4,18 @@ import com.globalmemories.backend.dtos.CredentialsDto;
 import com.globalmemories.backend.dtos.SignUpDto;
 import com.globalmemories.backend.dtos.UserAccountDto;
 import com.globalmemories.backend.dtos.UserDto;
+import com.globalmemories.backend.entites.Follow;
+import com.globalmemories.backend.entites.FollowRequest;
 import com.globalmemories.backend.entites.User;
 import com.globalmemories.backend.exceptions.AppException;
 import com.globalmemories.backend.mappers.UserMapper;
+import com.globalmemories.backend.repositories.FollowRepository;
+import com.globalmemories.backend.repositories.FollowRequestRepository;
 import com.globalmemories.backend.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +27,8 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final FollowRepository followRepository;
+    private final FollowRequestRepository followRequestRepository;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -125,6 +130,27 @@ public class UserService {
             throw new AppException("Data integrity violation: " + e.getMessage(), HttpStatus.BAD_REQUEST, e);
         } catch (Exception e) {
             throw new AppException("An unexpected error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR, e);
+        }
+    }
+
+    public void followUser(Long requesterId, Long targetId) {
+        User requester = userRepository.findById(requesterId).orElseThrow();
+        User target = userRepository.findById(targetId).orElseThrow();
+        if (target.isPrivateProfile()) {
+            if (!followRequestRepository.existsByRequesterIdAndTargetId(requesterId, targetId)) {
+                followRequestRepository.save(FollowRequest.builder()
+                    .requester(requester)
+                    .target(target)
+                    .accepted(false)
+                    .build());
+            }
+        } else {
+            if (!followRepository.existsByFollowerIdAndFollowedId(requesterId, targetId)) {
+                followRepository.save(Follow.builder()
+                    .follower(requester)
+                    .followed(target)
+                    .build());
+            }
         }
     }
 
