@@ -1,6 +1,7 @@
 package com.globalmemories.backend.services;
 
 import com.globalmemories.backend.dtos.CredentialsDto;
+import com.globalmemories.backend.dtos.FollowRequestUserInfoDto;
 import com.globalmemories.backend.dtos.SignUpDto;
 import com.globalmemories.backend.dtos.UserAccountDto;
 import com.globalmemories.backend.dtos.UserDto;
@@ -20,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.nio.CharBuffer;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -154,4 +156,65 @@ public class UserService {
         }
     }
 
+    public List<FollowRequestUserInfoDto> getPendingFollowRequests(Long userId) {
+        List<FollowRequestUserInfoDto> pendentRequests = followRequestRepository.findByTargetIdAndAcceptedFalse(userId).stream()
+            .map(fr -> FollowRequestUserInfoDto.builder()
+                .id(fr.getId())
+                .requester(userMapper.toUserDto(fr.getRequester()))
+                .targetId(fr.getTarget().getId())
+                .accepted(fr.isAccepted())
+                .build())
+            .toList();
+        return pendentRequests;  
+    }
+
+    public void acceptFollowRequest(Long userId, Long requestId) {
+        FollowRequest followRequest = followRequestRepository.findById(requestId)
+            .orElseThrow(() -> new AppException("Follow request not found", HttpStatus.NOT_FOUND));
+        if (!followRequest.getTarget().getId().equals(userId)) {
+            throw new AppException("You are not authorized to accept this follow request", HttpStatus.FORBIDDEN);
+        }
+        followRequest.setAccepted(true);
+        followRequestRepository.save(followRequest);
+        followRepository.save(Follow.builder()
+            .follower(followRequest.getRequester())
+            .followed(followRequest.getTarget())
+            .build());
+        followRequestRepository.delete(followRequest);    
+    }
+    
+    public void rejectFollowRequest(Long userId, Long requestId) {
+        FollowRequest followRequest = followRequestRepository.findById(requestId)
+            .orElseThrow(() -> new AppException("Follow request not found", HttpStatus.NOT_FOUND));
+        if (!followRequest.getTarget().getId().equals(userId)) {
+            throw new AppException("You are not authorized to reject this follow request", HttpStatus.FORBIDDEN);
+        }
+        followRequestRepository.delete(followRequest);    
+    }
+
+    public Long getNumberOfFollows(Long userId) {
+        return followRepository.countByFollowerId(userId);
+    }
+
+    public Long getNumberOfFollowers(Long userId) {
+        return followRepository.countByFollowedId(userId);
+    }
+
+    public List<UserDto> getFollows(Long userId) {
+        List<User> follows = followRepository.findAll().stream()
+            .filter(f -> f.getFollower().getId().equals(userId))
+            .map(Follow::getFollowed)
+            .toList();
+        return userMapper.toDtoList(follows);
+    }
+
+    public List<UserDto> getFollowers(Long userId) {
+        List<User> followers = followRepository.findAll().stream()
+            .filter(f -> f.getFollowed().getId().equals(userId))
+            .map(Follow::getFollower)
+            .toList();
+        return userMapper.toDtoList(followers);
+    }
 }
+
+

@@ -1,6 +1,8 @@
 package com.globalmemories.backend.controllers;
 
 
+import com.globalmemories.backend.dtos.FollowRequestDto;
+import com.globalmemories.backend.dtos.FollowRequestUserInfoDto;
 import com.globalmemories.backend.dtos.UserAccountDto;
 import com.globalmemories.backend.dtos.UserDto;
 import com.globalmemories.backend.services.UserService;
@@ -8,18 +10,22 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -64,6 +70,58 @@ public class UserController {
 
         UserDto updatedUser = userService.updateUserAccount(id, userAccountDto);
         return ResponseEntity.ok(updatedUser);
+    }
+
+    // 1. Follow or request to follow a user
+    @PostMapping("/{id}/follow")
+    public ResponseEntity<Void> followUser(@PathVariable Long id, @RequestParam Long requesterId) {
+        userService.followUser(requesterId, id);
+        return ResponseEntity.ok().build();
+    }
+
+    // 2. Get pending follow requests for a user (private profile)
+    @GetMapping("/{id}/follow-requests")
+    public ResponseEntity<List<FollowRequestUserInfoDto>> getFollowRequests(@PathVariable Long id) {
+        List<FollowRequestUserInfoDto> requests = userService.getPendingFollowRequests(id);
+        return ResponseEntity.ok(requests);
+    }
+
+    // 3. Accept a follow request
+    @PostMapping("/{id}/follow-requests/{requestId}/accept")
+    public ResponseEntity<Void> acceptFollowRequest(@PathVariable Long id, @PathVariable Long requestId) {
+        userService.acceptFollowRequest(id, requestId);
+        return ResponseEntity.ok().build();
+    }
+
+    // 4. Reject a follow request
+    @PostMapping("/{id}/follow-requests/{requestId}/reject")
+    public ResponseEntity<Void> rejectFollowRequest(@PathVariable Long id, @PathVariable Long requestId) {
+        userService.rejectFollowRequest(id, requestId);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/nr-follows")
+    public ResponseEntity<Long> getNumberOfFollows(@RequestParam Long userId) {
+        Long numFollows = userService.getNumberOfFollows(userId);
+        return ResponseEntity.ok(numFollows);
+    }
+
+    @GetMapping("/nr-followers")
+    public ResponseEntity<Long> getNumberOfFollowers(@RequestParam Long userId) {
+        Long numFollowers = userService.getNumberOfFollowers(userId);
+        return ResponseEntity.ok(numFollowers);
+    }
+
+    @GetMapping("/follows")
+    public ResponseEntity<List<UserDto>> getFollows(@RequestParam Long userId) {
+        List<UserDto> follows = userService.getFollows(userId);
+        return ResponseEntity.ok(follows);
+    }
+
+    @GetMapping("/followers")
+    public ResponseEntity<List<UserDto>> getFollowers(@RequestParam Long userId) {
+        List<UserDto> followers = userService.getFollowers(userId);
+        return ResponseEntity.ok(followers);
     }
 
 }
